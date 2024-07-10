@@ -38,7 +38,7 @@ extension Double {
 	/// Например: 1234.561212 -> "$1,234.56"
 	func asCurrencyShort() -> String {
 		let number = NSNumber(value: self)
-		return currencyFormatter.string(from: number) ?? "$0.00"
+		return currencyFormatterShort.string(from: number) ?? "$0.00"
 	}
 	
 	/// Конвертирует Double в строку с 2 знаками после запятой

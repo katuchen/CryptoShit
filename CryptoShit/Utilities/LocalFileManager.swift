@@ -3,12 +3,9 @@ import SwiftUI
 
 class LocalFileManager {
 	static let instance = LocalFileManager()
-	private init() {
-		
-	}
+	private init() { }
 	
 	func saveImage(image: UIImage, imageName: String, folderName: String) {
-		
 		createFolderIfNeeded(folderName: folderName)
 		
 		guard
@@ -33,6 +30,7 @@ class LocalFileManager {
 	private func createFolderIfNeeded(folderName: String) {
 		guard
 			let url = getFolderURL(folderName: folderName) else { return }
+		
 		if !FileManager.default.fileExists(atPath: url.path) {
 			do {
 				try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
