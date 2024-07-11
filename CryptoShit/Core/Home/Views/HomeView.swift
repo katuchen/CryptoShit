@@ -8,29 +8,31 @@ struct HomeView: View {
 	@State private var sortCoin = false
 	
 	var body: some View {
-		ZStack {
-			// background layer
-			Color.theme.background
-				.ignoresSafeArea()
-			
-			// content layer
-			VStack {
-				homeHeader
-				HomeStatisticsView(showPortfolio: $showPortfolio)
-				SearchBarView(searchText: $vm.searchText)
-				columnTitles
-				.font(.caption)
-				.foregroundStyle(Color.theme.secondaryText)
-				.padding(.horizontal)
-				if !showPortfolio {
-					allCoinsList
-						.transition(.move(edge: .leading))
+		NavigationStack {
+			ZStack {
+				// background layer
+				Color.theme.background
+					.ignoresSafeArea()
+				
+				// content layer
+				VStack {
+					homeHeader
+					HomeStatisticsView(showPortfolio: $showPortfolio)
+					SearchBarView(searchText: $vm.searchText)
+					columnTitles
+						.font(.caption)
+						.foregroundStyle(Color.theme.secondaryText)
+						.padding(.horizontal)
+					if !showPortfolio {
+						allCoinsList
+							.transition(.move(edge: .leading))
+					}
+					if showPortfolio {
+						portfolioCoinsList
+							.transition(.move(edge: .trailing))
+					}
+					Spacer()
 				}
-				if showPortfolio {
-					portfolioCoinsList
-						.transition(.move(edge: .trailing))
-				}
-				Spacer()
 			}
 		}
 	}
@@ -122,8 +124,13 @@ extension HomeView {
 	private var allCoinsList: some View {
 		List {
 			ForEach(vm.allCoins) { coin in
-				CoinRowView(coin: coin, showHoldingsColumn: false)
-					.listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+				NavigationLink {
+					LazyView(CoinDetailsView(coin: coin))
+				} label: {
+					CoinRowView(coin: coin, showHoldingsColumn: false)
+						.listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+				}
+				
 			}
 		}
 		.refreshable {
@@ -135,8 +142,12 @@ extension HomeView {
 	private var portfolioCoinsList: some View {
 		List {
 			ForEach(vm.portfolioCoins) { coin in
-				CoinRowView(coin: coin, showHoldingsColumn: true)
-					.listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+				NavigationLink {
+					LazyView(CoinDetailsView(coin: coin))
+				} label: {
+					CoinRowView(coin: coin, showHoldingsColumn: true)
+						.listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+				}
 			}
 		}
 		.listStyle(.plain)
