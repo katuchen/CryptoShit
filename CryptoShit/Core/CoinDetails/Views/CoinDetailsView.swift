@@ -18,9 +18,6 @@ struct CoinDetailsView: View {
 	var body: some View {
 		ScrollView {
 			VStack(spacing: 20) {
-				Text("")
-					.frame(height: 150)
-				
 				overviewTitle
 				Divider()
 				overviewStats

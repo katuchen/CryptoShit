@@ -5,6 +5,7 @@ class CoinDetailsViewModel: ObservableObject {
 	
 	@Published var overviewStatistics: [StatisticModel] = []
 	@Published var additionalDetailsStatistics: [StatisticModel] = []
+	@Published var description: String?
 	@Published var coin: CoinModel
 	
 	private let coinDetailsDataService: CoinDetailsDataService
@@ -23,15 +24,17 @@ class CoinDetailsViewModel: ObservableObject {
 			.sink { [weak self] returnedarrays in
 				self?.overviewStatistics = returnedarrays.overview
 				self?.additionalDetailsStatistics = returnedarrays.additionalDetails
+				self?.description = returnedarrays.description
 			}
 			.store(in: &cancellables)
 	}
 	
-	private func mapDataToStatistics(coinDetailModel: CoinDetailsModel?, coinModel: CoinModel) -> (overview: [StatisticModel], additionalDetails: [StatisticModel]) {
+	private func mapDataToStatistics(coinDetailModel: CoinDetailsModel?, coinModel: CoinModel) -> (overview: [StatisticModel], additionalDetails: [StatisticModel], description: String) {
 		let overviewArray = createOverviewArray(coinModel: coinModel)
 		let additionalStatisticsArray = createAdditionalDetailsArray(coinDetailModel: coinDetailModel, coinModel: coinModel)
+		let description = getDescription(coinDetailModel: coinDetailModel)
 		
-		return (overviewArray, additionalStatisticsArray)
+		return (overviewArray, additionalStatisticsArray, description)
 	}
 	
 	func createOverviewArray(coinModel: CoinModel) -> [StatisticModel] {
@@ -84,5 +87,11 @@ class CoinDetailsViewModel: ObservableObject {
 		]
 		
 		return additionalStatisticsArray
+	}
+	
+	func getDescription(coinDetailModel: CoinDetailsModel?) -> String {
+		guard
+			let description = coinDetailModel?.description?.en else { return ""}
+		return description
 	}
 }
