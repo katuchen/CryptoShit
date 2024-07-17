@@ -145,9 +145,10 @@ extension HomeView {
 					CoinRowView(coin: coin, showHoldingsColumn: false)
 						.listRowInsets(.init(top: 10, leading: -10, bottom: 10, trailing: 0))
 				}
-				
 			}
+			.listRowBackground(Color.clear)
 		}
+
 		.refreshable {
 			vm.reloadData()
 		}
@@ -166,6 +167,7 @@ extension HomeView {
 				}
 			}
 			.onDelete(perform: delete)
+			.listRowBackground(Color.theme.background)
 		}
 		.listStyle(.plain)
 	}
