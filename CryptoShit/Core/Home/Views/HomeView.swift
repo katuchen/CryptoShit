@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HomeView: View {
 	
-	@EnvironmentObject private var vm : HomeViewModel
+	@EnvironmentObject private var vm: HomeViewModel
 	@State private var showPortfolio = false
 	@State private var showPortfolioView = false
 	@State private var sortCoin = false
@@ -34,6 +34,21 @@ struct HomeView: View {
 					Spacer()
 				}
 			}
+			.gesture(
+				DragGesture()
+					.onEnded { value in
+						let horizontalAmount = value.translation.width
+						if horizontalAmount > 50 {
+							withAnimation(.spring) {
+								showPortfolio = false
+							}
+						} else if horizontalAmount < -50 {
+							withAnimation(.spring) {
+								showPortfolio = true
+							}
+						}
+					}
+			)
 		}
 	}
 }
@@ -128,7 +143,7 @@ extension HomeView {
 					LazyView(CoinDetailsView(coin: coin))
 				} label: {
 					CoinRowView(coin: coin, showHoldingsColumn: false)
-						.listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+						.listRowInsets(.init(top: 10, leading: -10, bottom: 10, trailing: 0))
 				}
 				
 			}
@@ -147,6 +162,7 @@ extension HomeView {
 				} label: {
 					CoinRowView(coin: coin, showHoldingsColumn: true)
 						.listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+						.buttonStyle(.plain)
 				}
 			}
 			.onDelete(perform: delete)
